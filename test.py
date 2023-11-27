@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import pprint
 
 CLIENT_ID = "b6e830d1676144f78ea9e0b5f850e11c"          # wprowadź Client_ID aplikacji
 CLIENT_SECRET = "BTfuNFAtEIYGIMh4Q5Y1euMqCBW2HmBgnQjaL5izWp9SY7y5GeBSQaIqdHiFTARt"      # wprowadź Client_Secret aplikacji
@@ -47,17 +48,25 @@ def await_for_access_token(interval, device_code):
             if token['error'] == 'access_denied':
                 break
         else:
-            return token['access_token']
+            return token
 
 
 def main():
     code = get_code()
     # print(code)
     result = json.loads(code.text)
-    # print(result)
+    pprint.pprint(result)
     print("User, open this address in the browser:" + result['verification_uri_complete'])
     access_token = await_for_access_token(int(result['interval']), result['device_code'])
-    print("access_token = " + access_token)
+    print("access_token = " + access_token['access_token'])
+    # print("whole_token = " + access_token)
+    print(30*"X")
+    pprint.pprint(access_token)
+    with open('access_token.txt', 'w') as file:
+        file.write(access_token['access_token'])
+    with open('refresh_token.txt', 'w') as file:
+        file.write(access_token['refresh_token'])
+
 
 
 if __name__ == "__main__":

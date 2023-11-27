@@ -1,8 +1,6 @@
 package com.example.allegro;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -15,7 +13,7 @@ public class AllegroAPIClient {
     private static final String TOKEN_URL = "https://allegro.pl/auth/oauth/token";
     private static final String CATEGORIES_URL = "https://api.allegro.pl/sale/categories"; //.allegrosandbox.pl
     private static final String PRODUCTS_URL = "https://api.allegro.pl/sale/products";
-    private static final String TEST_URL = "https://api.allegro.pl/sale/products?phrase=termos";
+    private static final String TEST_URL = "https://api.allegro.pl/sale/products?phrase=kapsulki";
     public static String getAccessToken() {
         try {
             URL url = new URL(TOKEN_URL);
@@ -87,11 +85,22 @@ public class AllegroAPIClient {
 
     public static void main(String[] args) {
         try {
-            String token = getAccessToken();
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println(token);
-            String test = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiIzNDI1MTcxMyIsInNjb3BlIjpbImFsbGVncm86YXBpOnNhbGU6c2V0dGluZ3M6cmVhZCIsImFsbGVncm86YXBpOnNhbGU6b2ZmZXJzOnJlYWQiXSwiYWxsZWdyb19hcGkiOnRydWUsImlzcyI6Imh0dHBzOi8vYWxsZWdyby5wbCIsImV4cCI6MTcwMDQ2Mzk3OSwianRpIjoiODAyY2FiMTctODlmMC00NGZhLTg0ODMtZDkzZWNjZGVmMjE4IiwiY2xpZW50X2lkIjoiYjZlODMwZDE2NzYxNDRmNzhlYTllMGI1Zjg1MGUxMWMifQ.xOIu9MWBhN5VLpsSYozj4tvEczokutqUbeZDAjaf-jZFDJAROWapWh8pfYcTs0KL-I_CqOUFFGatkOT5uYeKPy9uy9NwS_S45I6UY_Pzga5l4CC-0AqO1MbWqK_zZ8s-Xri8ucwy8AOVJThsOrSz45mmF4qcXQwZVo2_-hJTT6BvQL8-E1I5HaT2A-o8mDHmulAe2QXkAzy1YbBCmHjEHjHCYw6H3mGEMMUToS4vwq-f144Yx-ddxgDkxUauVKDads5L7hZc8rFZoXM3drzwJGvTmS5FugEAbFRY02unJKmhvaKFtvtYXCjGd2PhbeatnQY5eS-rrC0XoSKIVUA6Lg";
-            String mainCategories = getMainCategories(test);
+            TokenRefresh.main(args);
+            BufferedReader reader = null;
+            String refresh_token = null;
+            try {
+                reader = new BufferedReader(new FileReader("refresh_token.txt"));
+                refresh_token = reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (reader != null) reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            String mainCategories = getMainCategories(refresh_token);
             System.out.println(mainCategories);
         } catch (Exception e) {
             e.printStackTrace();
