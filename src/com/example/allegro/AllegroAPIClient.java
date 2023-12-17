@@ -19,6 +19,8 @@ public class AllegroAPIClient {
     private static final String SMART_OPTION = "SMART";
     private static final String SUPERSELLER_OPTION  = "SUPERSELLER";
     private static final String BRAND_ZONE_OPTION  = "BRAND_ZONE";
+    private static final String LIMIT_OFFERS  = "5";
+    private static final String SORT_PRICE_WITH_DELIVERY  = "+withDeliveryPrice";
     private static final String DELIVERY_METHOD = "5b445fe6580ce26bb2f9960a";
     private static final boolean FALLBACK = true;
 
@@ -40,6 +42,12 @@ public class AllegroAPIClient {
 
             // oferty smart
             urlBuilder.append("&option=").append(SMART_OPTION);
+
+            // sortowanie po cenie z dostawą (od najniższej)
+            urlBuilder.append("&sort=").append(SORT_PRICE_WITH_DELIVERY);
+
+            // ustawienie limitu produktów w zapytaniu - domyślna wartość jeśli nie podana = 60
+            urlBuilder.append("&limit=").append(LIMIT_OFFERS);
 
             // stan produktu
             urlBuilder.append("&parameter.11323=11323_1"); // produkt jest nowy
